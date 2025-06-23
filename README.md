@@ -22,8 +22,8 @@ All pages have simple text for the purpose of demonstration
     - Ensure Docker is installed on your machine
     - Start your docker daemon
     - cd to the service directory
-    - run docker build .
-    - docker run <container-name>
+    - run docker build -t security-in-memory .
+    - docker run -p 8080:8080 security-in-memory
     - visit localhost:8080 and specify the endpoint you would like to visit
 
 
