@@ -1,7 +1,9 @@
 package com.nthabi.securitygraphql.controller;
 
 import com.nthabi.securitygraphql.model.CustomUser;
+import com.nthabi.securitygraphql.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,11 +19,10 @@ import java.util.Collections;
 @RestController
 public class DashboardController {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    InMemoryUserDetailsManager inMemoryUserDetailsManager;
+    private UserService userService;
 
     @GetMapping("/")
     public String welcome(){
@@ -34,9 +35,8 @@ public class DashboardController {
     }
 
     @PostMapping("/new")
-    public String createUser(@RequestBody CustomUser user){
-        UserDetails userDetails = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), Collections.singleton(new SimpleGrantedAuthority("USER")));
-        inMemoryUserDetailsManager.createUser(userDetails);
-        return "User created!";
+    public ResponseEntity<String> createUser(@RequestBody CustomUser user){
+        userService.createUser(user);
+        return ResponseEntity.ok("User created");
     }
 }
