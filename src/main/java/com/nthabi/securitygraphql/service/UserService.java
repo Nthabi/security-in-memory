@@ -15,11 +15,14 @@ import java.util.Collections;
 @Service
 public class UserService {
 
-    @Autowired
-    private InMemoryUserDetailsManager inMemoryUserDetailsManager;
+    private final InMemoryUserDetailsManager inMemoryUserDetailsManager;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(InMemoryUserDetailsManager inMemoryUserDetailsManager, PasswordEncoder passwordEncoder) {
+        this.inMemoryUserDetailsManager = inMemoryUserDetailsManager;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void createUser(CustomUser user) {
         UserDetails userDetails = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), Collections.singleton(new SimpleGrantedAuthority(user.getRole())));
@@ -30,7 +33,9 @@ public class UserService {
         if (inMemoryUserDetailsManager.userExists(user.getUsername())) {
             UserDetails newUser = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), Collections.singleton(new SimpleGrantedAuthority(user.getRole())));
             inMemoryUserDetailsManager.updateUser(newUser);
+
         }
         throw new UsernameNotFoundException("User doesn't exist");
     }
+
 }
